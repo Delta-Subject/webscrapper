@@ -10,7 +10,9 @@ const response = await fetch(url);
 const body = await response.text();
 
 const $ = cheerio.load(body);
-const output = $(parser).text();
+const output = [];
+
+$(parser).each((i, elem) => output[i] = $(elem).text());
 
 // Debugging
 
