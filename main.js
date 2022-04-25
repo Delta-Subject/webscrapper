@@ -6,13 +6,18 @@ const parser = 'td > b > a[title]';
 
 // Functioning
 
-const response = await fetch(url);
-const body = await response.text();
-
-const $ = cheerio.load(body);
+let response, body, $;
 const output = [];
 
-$(parser).each((i, elem) => output[i] = $(elem).text());
+try {
+    response = await fetch(url);
+    body = await response.text();
+    $ = cheerio.load(body);
+    $(parser).each((i, elem) => output[i] = $(elem).text());
+} catch (error) {
+    console.log(error);
+}
+
 
 // Debugging
 
