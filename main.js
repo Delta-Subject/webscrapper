@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 
-
 const scrape = async (url, parser) => {
     try {
         const output = []
@@ -15,5 +14,13 @@ const scrape = async (url, parser) => {
 
 
 // Debugging
+const titles = await scrape('http://libgen.rs/search.php?req=topicid62&open=0&column=topic', 'td a[id]');
+const artists = await scrape('http://libgen.rs/search.php?req=topicid62&open=0&column=topic', 'tbody td > a[href^=search]');
 
-console.log(await scrape('https://en.wikipedia.org/wiki/List_of_Presidents_of_the_United_States', 'td > b > a[title]'))
+const list = [];
+for (let title of titles) {
+    for (let artist of artists) {
+        list.push({ title: title, artist: artist })
+    }
+}
+console.log(list);
