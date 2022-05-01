@@ -1,10 +1,18 @@
 import fetch from 'node-fetch';
 import * as cheerio from 'cheerio';
 
-const scrape = async (url, parser) => {
+const fetchHtml = async (url) => {
     try {
-        const output = []
-        const $ = cheerio.load(await fetch(url).then((res) => res.text()));
+        return await fetch(url).then(res => res.text())
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const parseHtml = (html, parser) => {
+    try {
+        const $ = cheerio.load(html)
+        const output = [];
         $(parser).each((i, elem) => output[i] = $(elem).text());
         return output;
     } catch (error) {
@@ -12,15 +20,23 @@ const scrape = async (url, parser) => {
     }
 }
 
+const body = await fetchHtml('http://libgen.rs/search.php?&req=topicid62&phrase=1&view=simple&column=topic&sort=def&sortmode=ASC&page=1');
+const titles = parseHtml(body, 'tr a[id]');
+const authors = parseHtml(body, 'tr td > a[href^=search]');
+
+let data = [];
+
+(() => {
+    for (let i in titles) {
+        data.push({ title: titles[i], author: authors[i] });
+    }
+})()
 
 // Debugging
-const titles = await scrape('http://libgen.rs/search.php?req=topicid62&open=0&column=topic', 'td a[id]');
-const artists = await scrape('http://libgen.rs/search.php?req=topicid62&open=0&column=topic', 'tbody td > a[href^=search]');
+ console.log(data)
 
-const list = [];
-for (let title of titles) {
-    for (let artist of artists) {
-        list.push({ title: title, artist: artist })
-    }
-}
-console.log(list);
+/* TO DO: 
+    Fix authors parsing due to first entry having a comma
+    Get to write a JSON file in machine
+    Get to write a Google Spreadsheets using API
+*/
