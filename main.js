@@ -20,23 +20,21 @@ const parseHtml = (html, parser) => {
     }
 }
 
-const body = await fetchHtml('http://libgen.rs/search.php?&req=topicid62&phrase=1&view=simple&column=topic&sort=def&sortmode=ASC&page=1');
-const titles = parseHtml(body, 'tr a[id]');
-const authors = parseHtml(body, 'tr td > a[href^=search]');
+const body = await fetchHtml('https://en.wikipedia.org/wiki/List_of_presidents_of_the_United_States');
+const presidents = parseHtml(body, 'td > b > a[title]');
+const vicePresidents = parseHtml(body, 'td[data-sort-value] > a[href]');
 
 let data = [];
 
-(() => {
-    for (let i in titles) {
-        data.push({ title: titles[i], author: authors[i] });
+    for (let i in presidents) {
+        data.push({ name: presidents[i], vice: vicePresidents[i] });
     }
-})()
 
 // Debugging
- console.log(data)
+console.log(data);
 
 /* TO DO: 
-    Fix authors parsing due to first entry having a comma
+    Fix authors parsing due to inaccurate parser
     Get to write a JSON file in machine
     Get to write a Google Spreadsheets using API
 */
