@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "node-fetch": "^3.2.3"
+    "node-fetch": "^3.2.3",
+    "typescript": "^4.7.4"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Delta-Subject/webscrapper.git"
